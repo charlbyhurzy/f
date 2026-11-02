@@ -4,6 +4,8 @@
 // libavformat + libavcodec + libswresample. Decodes any container
 // FFmpeg supports to interleaved float32.
 //
+// Requires FFmpeg 5.1 or newer (uses AVChannelLayout / ch_layout).
+//
 // Growth note: decode/MemoryMappedFile.h (tree) will provide mmap-backed
 // fast seeking. Current impl uses FFmpeg's default file I/O — correct,
 // just not optimally fast on cold seeks.
@@ -22,6 +24,7 @@ extern "C" {
 }
 
 #include <algorithm>
+#include <cstddef>
 #include <cstdint>
 #include <new>
 #include <stdexcept>
@@ -30,6 +33,8 @@ extern "C" {
 
 namespace futura::engine::decode {
 
+// Not thread-safe. Use from one decoder thread only; guard it with a mutex
+// if any other thread needs to call open, seek_to or read_frames.
 class FFmpegDecoderContext {
 public:
     FFmpegDecoderContext() = default;
@@ -235,8 +240,11 @@ private:
                     in_ptrs, static_cast<int>(to_copy));
                 if (converted < 0) { set_error("swr_convert failed"); return frames_written; }
 
+                // swr_convert consumes all to_copy input frames we pass it (the
+                // rate is unchanged), so advance the input cursor by to_copy, not
+                // by the output count.
                 frames_written += static_cast<size_t>(converted);
-                frame_offset_  += converted;
+                frame_offset_  += static_cast<int>(to_copy);
 
                 if (frame_offset_ >= frame_->nb_samples) {
                     av_frame_unref(frame_);
