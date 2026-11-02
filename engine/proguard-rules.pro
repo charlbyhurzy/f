@@ -64,7 +64,6 @@
 
 -keepclassmembers class com.futura.engine.NativeEngine {
     static native <methods>;
-    static <clinit>;
 }
 
 -keepattributes SourceFile,LineNumberTable
