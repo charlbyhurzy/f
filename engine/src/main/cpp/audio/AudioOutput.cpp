@@ -4,7 +4,7 @@
 //
 // ⚠️  HEADER-FIX REQUIRED  ⚠️
 // This file depends on `audio/AudioOutput.h`, which (as delivered two
-// turns ago) uses bare `oboe::Xxx` for Oboe-library types inside
+// turns ago) uses bare `::oboe::Xxx` for Oboe-library types inside
 // `namespace futura::engine::audio`. That resolves to the project's
 // `futura::engine::oboe` namespace, not the Oboe library's `::oboe` —
 // the header does not compile as delivered. Apply the mechanical fix
@@ -111,7 +111,7 @@ bool AudioOutput::open(
 
     if (!stream) {
         // Preserve the builder's diagnostics verbatim — they carry the
-        // oboe::Result and Oboe's own message, both of which the caller
+        // ::oboe::Result and Oboe's own message, both of which the caller
         // may want to log.
         setError(
             builder.last_result(),

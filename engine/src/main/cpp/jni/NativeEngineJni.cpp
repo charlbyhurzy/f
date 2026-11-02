@@ -4,7 +4,7 @@
 // CrashHandlerJni.cpp).
 //
 // Prerequisite: AudioOutput.h and OboeStreamBuilder.h need the
-// oboe:: → ::oboe:: fix before this file compiles (Engine.h transitively
+// ::oboe:: → ::oboe:: fix before this file compiles (Engine.h transitively
 // includes both).
 //
 // Threading: NativeEngine.kt calls these from any app thread, so every

@@ -7,7 +7,7 @@
 //
 // ── Responsibility ──────────────────────────────────────────────────────
 // This header owns exactly one concern: given a configuration, open an
-// `oboe::AudioStream` and return it. Everything else about the audio
+// `::oboe::AudioStream` and return it. Everything else about the audio
 // path — how the stream is fed (render loop, ring buffer), how it
 // reacts to device changes (AudioDeviceRoutingMonitor.h), how xruns are
 // detected (XRunDetector.h), how buffer size is auto-tuned
@@ -21,7 +21,7 @@
 //     output stream.
 //   • `AAudioHardwarePath.h` (feature #52) and `OpenSLESFallback.h`
 //     (feature #53) will call `build_with_api()` with explicit
-//     `oboe::AudioApi::AAudio` / `oboe::AudioApi::OpenSLES` when they
+//     `::oboe::AudioApi::AAudio` / `::oboe::AudioApi::OpenSLES` when they
 //     need to force a specific hardware path.
 //   • `BufferUnderrunRecovery.h` (feature #153) will call `build()`
 //     again to re-open the stream after a device disconnect.
@@ -73,7 +73,7 @@
 //
 // ── Rule-of-five ─────────────────────────────────────────────────────
 // Copy and move are both deleted. Rationale: the class holds a
-// `std::string` for the error message and an `oboe::AudioApi` for the
+// `std::string` for the error message and an `::oboe::AudioApi` for the
 // last-observed API. Copying it would duplicate state that's meant to
 // describe a single specific build attempt. Moving it would require the
 // destination to also own the pending state, which makes no semantic
@@ -93,9 +93,9 @@
 //     futura::engine::oboe::AudioStreamConfig config;
 //     config.sample_rate = 0;                    // device default
 //     config.channel_count = 2;                  // stereo
-//     config.format = oboe::AudioFormat::Float;  // float32 samples
+//     config.format = ::oboe::AudioFormat::Float;  // float32 samples
 //     config.performance_mode =
-//         oboe::PerformanceMode::LowLatency;
+//         ::oboe::PerformanceMode::LowLatency;
 //
 //     futura::engine::oboe::OboeStreamBuilder builder;
 //     auto stream = builder.build(config, this, this);
@@ -191,7 +191,7 @@ struct AudioStreamConfig {
      * only at the very last step (feature #71 —
      * `FloatToInt16Converter.h`) is the standard pipeline.
      */
-    oboe::AudioFormat format = oboe::AudioFormat::Float;
+    ::oboe::AudioFormat format = ::oboe::AudioFormat::Float;
 
     /**
      * Oboe performance mode. `LowLatency` is the correct default for a
@@ -201,8 +201,8 @@ struct AudioStreamConfig {
      * silently. `PowerSaving` should only be requested when battery is
      * more important than latency — e.g., in Sleep Dock mode.
      */
-    oboe::PerformanceMode performance_mode =
-        oboe::PerformanceMode::LowLatency;
+    ::oboe::PerformanceMode performance_mode =
+        ::oboe::PerformanceMode::LowLatency;
 
     /**
      * Sharing mode. `Exclusive` requests dedicated access to the audio
@@ -211,7 +211,7 @@ struct AudioStreamConfig {
      * (the audio HAL often owns the device), in which case the builder
      * falls back to `Shared` if `fall_back_to_shared` is true.
      */
-    oboe::SharingMode sharing_mode = oboe::SharingMode::Exclusive;
+    ::oboe::SharingMode sharing_mode = ::oboe::SharingMode::Exclusive;
 
     /**
      * Direction of the stream. `Output` for playback (the primary use
@@ -220,7 +220,7 @@ struct AudioStreamConfig {
      * speech/music classification both operate on pre-decoded source
      * audio, not the microphone).
      */
-    oboe::Direction direction = oboe::Direction::Output;
+    ::oboe::Direction direction = ::oboe::Direction::Output;
 
     /**
      * Android audio usage hint. `Media` tells the OS this stream should
@@ -229,7 +229,7 @@ struct AudioStreamConfig {
      * would route the stream differently and are wrong for a music
      * player.
      */
-    oboe::Usage usage = oboe::Usage::Media;
+    ::oboe::Usage usage = ::oboe::Usage::Media;
 
     /**
      * Android content type hint. `Music` tells the OS this is
@@ -237,7 +237,7 @@ struct AudioStreamConfig {
      * processing, some OEM audio profiles). Correct for the app's
      * primary use case.
      */
-    oboe::ContentType content_type = oboe::ContentType::Music;
+    ::oboe::ContentType content_type = ::oboe::ContentType::Music;
 
     /**
      * Whether to fall back to `Shared` sharing mode when `Exclusive`
@@ -284,7 +284,7 @@ public:
      *
      * If `config.sharing_mode` is `Exclusive` and `fall_back_to_shared`
      * is `true` and the first attempt fails, retries with `Shared`
-     * mode automatically. Uses `oboe::AudioApi::Unspecified`, meaning
+     * mode automatically. Uses `::oboe::AudioApi::Unspecified`, meaning
      * Oboe chooses the API (AAudio on API 26+, OpenSL ES on older
      * devices).
      *
@@ -305,10 +305,10 @@ public:
      *         failure. Callers should check `last_error()` and
      *         `last_result()` for diagnostic detail.
      */
-    std::shared_ptr<oboe::AudioStream> build(
+    std::shared_ptr<::oboe::AudioStream> build(
         const AudioStreamConfig& config,
-        oboe::AudioStreamDataCallback* data_callback,
-        oboe::AudioStreamErrorCallback* error_callback);
+        ::oboe::AudioStreamDataCallback* data_callback,
+        ::oboe::AudioStreamErrorCallback* error_callback);
 
     /**
      * Build and open a stream, forcing a specific audio API.
@@ -317,31 +317,31 @@ public:
      * `AAudio` and by `OpenSLESFallback.h` (feature #53) to force
      * `OpenSLES`. All other semantics match [build].
      *
-     * @param preferred_api The `oboe::AudioApi` to attempt. Use
-     *        `oboe::AudioApi::Unspecified` to match `build()`'s
+     * @param preferred_api The `::oboe::AudioApi` to attempt. Use
+     *        `::oboe::AudioApi::Unspecified` to match `build()`'s
      *        behavior.
      */
-    std::shared_ptr<oboe::AudioStream> build_with_api(
+    std::shared_ptr<::oboe::AudioStream> build_with_api(
         const AudioStreamConfig& config,
-        oboe::AudioStreamDataCallback* data_callback,
-        oboe::AudioStreamErrorCallback* error_callback,
-        oboe::AudioApi preferred_api);
+        ::oboe::AudioStreamDataCallback* data_callback,
+        ::oboe::AudioStreamErrorCallback* error_callback,
+        ::oboe::AudioApi preferred_api);
 
     /**
      * Human-readable description of the last failure. Empty if the last
-     * `build()` succeeded. Populated from `oboe::convertToText()` — the
+     * `build()` succeeded. Populated from `::oboe::convertToText()` — the
      * same strings Oboe's own logging uses.
      */
     const std::string& last_error() const noexcept { return last_error_; }
 
     /**
-     * Machine-readable `oboe::Result` of the last `build()` attempt.
+     * Machine-readable `::oboe::Result` of the last `build()` attempt.
      * `Result::OK` on success. Callers who need to make a specific
      * decision based on the exact error (e.g., retry only on
      * `ErrorDisconnected`) read this; callers who just want to log
      * read `last_error()`.
      */
-    oboe::Result last_result() const noexcept { return last_result_; }
+    ::oboe::Result last_result() const noexcept { return last_result_; }
 
     /**
      * Which API the successful stream was opened with
@@ -349,7 +349,7 @@ public:
      * build. Useful for telemetry and for the Stream Inspector's
      * "AUDIO HAL" row.
      */
-    oboe::AudioApi opened_with_api() const noexcept { return opened_with_api_; }
+    ::oboe::AudioApi opened_with_api() const noexcept { return opened_with_api_; }
 
     /**
      * Clear the last-attempt state. Optional — every `build()` call
@@ -368,39 +368,39 @@ private:
      * `build_with_api` (once for the requested sharing mode, once for
      * the fallback).
      */
-    std::shared_ptr<oboe::AudioStream> try_open(
+    std::shared_ptr<::oboe::AudioStream> try_open(
         const AudioStreamConfig& config,
-        oboe::AudioStreamDataCallback* data_callback,
-        oboe::AudioStreamErrorCallback* error_callback,
-        oboe::AudioApi api,
-        oboe::SharingMode sharing_mode);
+        ::oboe::AudioStreamDataCallback* data_callback,
+        ::oboe::AudioStreamErrorCallback* error_callback,
+        ::oboe::AudioApi api,
+        ::oboe::SharingMode sharing_mode);
 
     std::string last_error_;
-    oboe::Result last_result_ = oboe::Result::OK;
-    oboe::AudioApi opened_with_api_ = oboe::AudioApi::Unspecified;
+    ::oboe::Result last_result_ = ::oboe::Result::OK;
+    ::oboe::AudioApi opened_with_api_ = ::oboe::AudioApi::Unspecified;
 };
 
 // ═════════════════════════════════════════════════════════════════════════
 // Inline implementations
 // ═════════════════════════════════════════════════════════════════════════
 
-inline std::shared_ptr<oboe::AudioStream> OboeStreamBuilder::build(
+inline std::shared_ptr<::oboe::AudioStream> OboeStreamBuilder::build(
     const AudioStreamConfig& config,
-    oboe::AudioStreamDataCallback* data_callback,
-    oboe::AudioStreamErrorCallback* error_callback) {
+    ::oboe::AudioStreamDataCallback* data_callback,
+    ::oboe::AudioStreamErrorCallback* error_callback) {
     return build_with_api(
         config,
         data_callback,
         error_callback,
-        oboe::AudioApi::Unspecified
+        ::oboe::AudioApi::Unspecified
     );
 }
 
-inline std::shared_ptr<oboe::AudioStream> OboeStreamBuilder::build_with_api(
+inline std::shared_ptr<::oboe::AudioStream> OboeStreamBuilder::build_with_api(
     const AudioStreamConfig& config,
-    oboe::AudioStreamDataCallback* data_callback,
-    oboe::AudioStreamErrorCallback* error_callback,
-    oboe::AudioApi preferred_api) {
+    ::oboe::AudioStreamDataCallback* data_callback,
+    ::oboe::AudioStreamErrorCallback* error_callback,
+    ::oboe::AudioApi preferred_api) {
 
     // Attempt 1: requested sharing mode.
     auto stream = try_open(
@@ -423,14 +423,14 @@ inline std::shared_ptr<oboe::AudioStream> OboeStreamBuilder::build_with_api(
     // two-attempt strategy explicit and easy to see.
     const bool can_fall_back =
         config.fall_back_to_shared &&
-        config.sharing_mode != oboe::SharingMode::Shared;
+        config.sharing_mode != ::oboe::SharingMode::Shared;
     if (can_fall_back) {
         stream = try_open(
             config,
             data_callback,
             error_callback,
             preferred_api,
-            oboe::SharingMode::Shared
+            ::oboe::SharingMode::Shared
         );
         if (stream) {
             return stream;
@@ -440,14 +440,14 @@ inline std::shared_ptr<oboe::AudioStream> OboeStreamBuilder::build_with_api(
     return nullptr;
 }
 
-inline std::shared_ptr<oboe::AudioStream> OboeStreamBuilder::try_open(
+inline std::shared_ptr<::oboe::AudioStream> OboeStreamBuilder::try_open(
     const AudioStreamConfig& config,
-    oboe::AudioStreamDataCallback* data_callback,
-    oboe::AudioStreamErrorCallback* error_callback,
-    oboe::AudioApi api,
-    oboe::SharingMode sharing_mode) {
+    ::oboe::AudioStreamDataCallback* data_callback,
+    ::oboe::AudioStreamErrorCallback* error_callback,
+    ::oboe::AudioApi api,
+    ::oboe::SharingMode sharing_mode) {
 
-    oboe::AudioStreamBuilder builder;
+    ::oboe::AudioStreamBuilder builder;
 
     builder.setDirection(config.direction);
     builder.setSampleRate(config.sample_rate);
@@ -472,17 +472,17 @@ inline std::shared_ptr<oboe::AudioStream> OboeStreamBuilder::try_open(
 
     // openStream() returns ResultWithValue<shared_ptr<AudioStream>>.
     // ResultWithValue has operator bool() for the "did it succeed?"
-    // check, .value() for the payload, and .error() for the oboe::Result.
+    // check, .value() for the payload, and .error() for the ::oboe::Result.
     auto result = builder.openStream();
 
     if (!result) {
         last_result_ = result.error();
-        last_error_ = oboe::convertToText(result.error());
+        last_error_ = ::oboe::convertToText(result.error());
         return nullptr;
     }
 
     auto stream = result.value();
-    last_result_ = oboe::Result::OK;
+    last_result_ = ::oboe::Result::OK;
     last_error_.clear();
     opened_with_api_ = stream->getAudioApi();
     return stream;
@@ -490,8 +490,8 @@ inline std::shared_ptr<oboe::AudioStream> OboeStreamBuilder::try_open(
 
 inline void OboeStreamBuilder::reset() noexcept {
     last_error_.clear();
-    last_result_ = oboe::Result::OK;
-    opened_with_api_ = oboe::AudioApi::Unspecified;
+    last_result_ = ::oboe::Result::OK;
+    opened_with_api_ = ::oboe::AudioApi::Unspecified;
 }
 
 }  // namespace futura::engine::oboe

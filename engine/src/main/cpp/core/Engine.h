@@ -92,7 +92,7 @@
 // ── Error handling philosophy ──────────────────────────────────────────
 // Every method that can fail returns bool (or a nullable / sentinel
 // value). Every failure populates `last_error_` (mutex-guarded) and
-// `last_result_` (oboe::Result enum), retrievable via lastError() and
+// `last_result_` (::oboe::Result enum), retrievable via lastError() and
 // lastResult(). This mirrors `AudioOutput.h`'s pattern and keeps a
 // single error surface for the caller to inspect after any call.
 //
@@ -735,7 +735,7 @@ public:
 
     /**
      * Round-trip hardware latency in milliseconds, as computed by
-     * `oboe::AudioStream::calculateLatencyMillis()`.
+     * `::oboe::AudioStream::calculateLatencyMillis()`.
      *
      * **Safe from any thread.**
      */
