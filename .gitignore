@@ -71,9 +71,9 @@ keystore.properties
 **/install_manifest.txt
 **/compile_commands.json
 
-engine/src/main/cpp/third_party/
 !engine/src/main/cpp/third_party/.gitkeep
 **/third_party/*/
+!engine/src/main/cpp/third_party/oboe/
 !**/third_party/.gitkeep
 **/third_party/**/*.so
 **/third_party/**/*.a
