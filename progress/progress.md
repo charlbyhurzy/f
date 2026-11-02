@@ -87,3 +87,12 @@
 
 - Performed targeted source, resource, reference, and structure checks after supplied files were added.
 - Full Gradle build remains unavailable because the wrapper JAR is empty and the project is still incomplete.
+
+## Native engine, vendored dependencies and build
+
+- Vendored Oboe and libsamplerate sources under `engine/src/main/cpp/third_party/`.
+- Added JNI bridges: `NativeEngineJni.cpp`, `DspJni.cpp`, `UsbAudioJni.cpp`, `MlJni.cpp`, `CrashHandlerJni.cpp`.
+- Added decoder and playback-path headers: `decode/FFmpegDecoderContext.h`, `decode/ResamplerEngine.h`, `core/StreamStateMachine.h`, `core/ZeroAllocRenderLoop.h`, `core/DecoderThread.h`.
+- Fixed the Gradle wrapper and `gradlew` line endings, the library `isDebuggable` error, Oboe namespace and API mismatches, Kotlin compile errors, and an invalid ProGuard keep rule.
+- Added a GitHub Actions workflow that builds a signed release APK from repository secrets.
+- Release minification is temporarily disabled because R8 fails with a `ConcurrentModificationException`.
