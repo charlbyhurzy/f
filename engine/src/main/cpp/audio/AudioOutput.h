@@ -730,7 +730,10 @@ inline int32_t AudioOutput::getFramesPerBurst() const noexcept {
 
 inline double AudioOutput::getLatencyMs() const noexcept {
     auto* stream = rawStream();
-    return stream ? stream->calculateLatencyMillis() : 0.0;
+    if (!stream) return 0.0;
+    // calculateLatencyMillis() returns ResultWithValue<double> in this Oboe version.
+    auto latency = stream->calculateLatencyMillis();
+    return latency ? latency.value() : 0.0;
 }
 
 inline int64_t AudioOutput::getFramesWritten() const noexcept {
@@ -740,11 +743,10 @@ inline int64_t AudioOutput::getFramesWritten() const noexcept {
 
 inline int32_t AudioOutput::getRenderThreadId() const noexcept {
     auto* stream = rawStream();
-    // getCallbackThreadId is available on Oboe >= 1.6. If the pinned
-    // Oboe version (see third_party/oboe/) predates this API, replace
-    // with `-1` until the dependency is bumped. Oboe 1.8+ — the
-    // current latest as of this writing — supports it.
-    return stream ? static_cast<int32_t>(stream->getCallbackThreadId()) : -1;
+    // The vendored Oboe version does not expose getCallbackThreadId(), so
+    // the render thread ID is reported as unknown (-1) until it is available.
+    (void)stream;
+    return -1;
 }
 
 inline ::oboe::AudioApi AudioOutput::getAudioApi() const noexcept {

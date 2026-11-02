@@ -470,18 +470,17 @@ inline std::shared_ptr<::oboe::AudioStream> OboeStreamBuilder::try_open(
         builder.setErrorCallback(error_callback);
     }
 
-    // openStream() returns ResultWithValue<shared_ptr<AudioStream>>.
-    // ResultWithValue has operator bool() for the "did it succeed?"
-    // check, .value() for the payload, and .error() for the ::oboe::Result.
-    auto result = builder.openStream();
+    // This Oboe version's openStream() takes a shared_ptr out-parameter and
+    // returns a plain ::oboe::Result.
+    std::shared_ptr<::oboe::AudioStream> stream;
+    const ::oboe::Result result = builder.openStream(stream);
 
-    if (!result) {
-        last_result_ = result.error();
-        last_error_ = ::oboe::convertToText(result.error());
+    if (result != ::oboe::Result::OK || !stream) {
+        last_result_ = result;
+        last_error_ = ::oboe::convertToText(result);
         return nullptr;
     }
 
-    auto stream = result.value();
     last_result_ = ::oboe::Result::OK;
     last_error_.clear();
     opened_with_api_ = stream->getAudioApi();
