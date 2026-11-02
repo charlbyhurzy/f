@@ -54,7 +54,6 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
-            isDebuggable = true
             externalNativeBuild {
                 cmake {
                     cppFlags += listOf("-O0", "-g", "-DDEBUG")
@@ -64,7 +63,6 @@ android {
         }
         release {
             isMinifyEnabled = true
-            isDebuggable = false
             consumerProguardFiles("proguard-rules.pro")
             externalNativeBuild {
                 cmake {
