@@ -1,0 +1,4 @@
+# Force LF for files executed on Linux (CI runners), even when checked out on Windows.
+*.sh text eol=lf
+gradlew text eol=lf
+gradle/wrapper/*.properties text eol=lf
