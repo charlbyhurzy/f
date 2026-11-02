@@ -65,10 +65,8 @@ android {
             versionNameSuffix = "-debug"
         }
         release {
-            // TEMP: R8 throws ConcurrentModificationException (AGP 8.5.2 / R8 8.5.35).
-            // Re-enable once the build is green.
-            isMinifyEnabled = false
-            isShrinkResources = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
