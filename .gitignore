@@ -184,3 +184,6 @@ gradle.properties.local
 
 # Vendored Oboe source is project code, not a submodule: allow all of it.
 !engine/src/main/cpp/third_party/oboe/**
+
+# Vendored libsamplerate source is project code, not a submodule: allow all of it.
+!engine/src/main/cpp/third_party/libsamplerate/**

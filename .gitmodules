@@ -6,11 +6,6 @@
 	url = https://github.com/xiph/flac.git
 	branch = master
 
-[submodule "engine/src/main/cpp/third_party/libsamplerate"]
-	path = engine/src/main/cpp/third_party/libsamplerate
-	url = https://github.com/libsndfile/libsamplerate.git
-	branch = master
-
 [submodule "engine/src/main/cpp/third_party/soundtouch"]
 	path = engine/src/main/cpp/third_party/soundtouch
 	url = https://codeberg.org/soundtouch/soundtouch.git
