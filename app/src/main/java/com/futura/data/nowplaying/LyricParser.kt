@@ -505,7 +505,7 @@ object LyricParser {
     // ═════════════════════════════════════════════════════════════════
 
     private fun assignEndTimes(sorted: List<ResolvedLine>): List<LyricLine> {
-        val result = mutableListOf<LyricLine>(sorted.size)
+        val result = ArrayList<LyricLine>(sorted.size)
         for ((index, line) in sorted.withIndex()) {
             // End of a line is the start of the next, or +DEFAULT_LINE_MS
             // for the last line (no further line to bound it).
