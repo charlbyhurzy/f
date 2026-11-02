@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Adaptive-icon foreground layer for the Futura Audio launcher icon.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="#00FF66"
+        android:fillType="evenOdd"
+        android:pathData="M54,22a32,32 0 1,0 0.01,0zM54,27a27,27 0 1,1 -0.01,0z" />
+    <path
+        android:fillColor="#00E5FF"
+        android:fillAlpha="0.30"
+        android:pathData="M54,34a20,20 0 1,0 0.01,0z" />
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M28,42L38,34L41,38L31,46z" />
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M80,42L70,34L67,38L77,46z" />
+    <path
+        android:fillColor="#00FF66"
+        android:pathData="M52.5,54L52.5,40L55.5,40L55.5,54z" />
+    <path
+        android:fillColor="#00FF66"
+        android:pathData="M54,54L64,58.5L62.5,61.5L53,57.5z" />
+    <path
+        android:fillColor="#00FF66"
+        android:pathData="M54,50.5a3.5,3.5 0 1,0 0.01,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.85"
+        android:pathData="M50,51a1.5,1.5 0 1,0 0.01,0z" />
+</vector>

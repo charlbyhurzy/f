@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    futura-audio/app/src/main/AndroidManifest.xml
+
+    Registers every Phase 1–6 component described in the Futura Audio
+    feature catalogue. Component names resolve relative to
+    package="com.futura" (declared via namespace in app/build.gradle.kts).
+
+    Notes
+    ─────
+    • Activity-alias entries (.ui.MainActivityFutura / .ui.MainActivityDisguise)
+      are virtual components delegating to .ui.MainActivity. If
+      MainActivityFutura.kt / MainActivityDisguise.kt are later implemented
+      as real Activity subclasses, replace the corresponding <activity-alias>
+      with an <activity> declaration (never declare both with the same name).
+    • All receivers listening exclusively to protected system broadcasts
+      (BOOT_COMPLETED, AUDIO_BECOMING_NOISY, MEDIA_MOUNTED, …) are declared
+      exported="false"; the system still delivers to them as a privileged
+      sender. TaskerIntentGateway is exported="true" by design — runtime
+      validation is handled by system/IpcSecurityGuard.kt.
+    • allowBackup="false" is deliberate: the Privacy Vault must never
+      propagate through Google cloud backup. The @xml/backup_rules and
+      @xml/data_extraction_rules files remain referenced for future
+      re-enablement.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Permissions
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- Core network + sync -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Alarm engine + playback persistence -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <!-- Foreground services (API 28+) + typed permission (API 34+) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+    <!-- Notifications + full-screen alarm surface -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+    <!-- Exact alarm scheduling (Phase 1 – AlarmSchedulerImpl) -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
+    <!-- Media library access (granular on API 33+, legacy fallback below) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <!-- Bluetooth playback + profile switching (Phase 6) -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+
+    <!-- Biometric wake-up lock (AlarmActivity) -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission
+        android:name="android.permission.USE_FINGERPRINT"
+        android:maxSdkVersion="27" />
+
+    <!-- High-rate accelerometer for SecretKnockProcessor (API 31+) -->
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Custom permissions (IPC hardening — system/IpcSecurityGuard.kt)
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <permission
+        android:name="com.futura.permission.CONTROL_PLAYBACK"
+        android:protectionLevel="signature"
+        tools:ignore="ProtectedPermissions" />
+
+    <permission
+        android:name="com.futura.permission.ACCESS_VAULT"
+        android:protectionLevel="signature"
+        tools:ignore="ProtectedPermissions" />
+
+    <uses-permission android:name="com.futura.permission.CONTROL_PLAYBACK" />
+    <uses-permission android:name="com.futura.permission.ACCESS_VAULT" />
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Hardware features
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <uses-feature
+        android:name="android.hardware.audio.low_latency"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.audio.pro"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.biometrics.face"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.fingerprint"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="false" />
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Application
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <application
+        android:name=".FuturaApp"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:extractNativeLibs="false"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="false"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Futura"
+        android:usesCleartextTraffic="false"
+        tools:targetApi="34"
+        tools:ignore="UnusedAttribute">
+
+        <!-- Hilt application entry point is provided by FuturaApp itself. -->
+        <meta-data
+            android:name="android.app.lib_name"
+            android:value="" />
+
+        <!-- Coil ImageLoader config (album-art cache) -->
+        <meta-data
+            android:name="coil.ImageLoaderFactory"
+            android:value="com.futura.di.CoilImageLoaderFactory" />
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             Activities
+             ═══════════════════════════════════════════════════════════════ -->
+
+        <!-- Compose host + NavHost. Not exported: only reachable via the
+             two launcher-aliases declared below. -->
+        <activity
+            android:name=".ui.MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode|density|smallestScreenSize"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:theme="@style/Theme.Futura"
+            android:windowSoftInputMode="adjustResize">
+
+            <!-- Deep-link surface for TaskerIntentGateway and internal
+                 MediaSession navigation actions. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="open"
+                    android:scheme="futura" />
+            </intent-filter>
+        </activity>
+
+        <!-- Launcher alias: primary "Futura" branding. Enabled by default. -->
+        <activity-alias
+            android:name=".ui.MainActivityFutura"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:targetActivity=".ui.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Launcher alias: "disguise" branding for camouflage mode. Disabled
+             by default; toggled at runtime by DecoyStatePersister via
+             PackageManager.setComponentEnabledSetting(). -->
+        <activity-alias
+            android:name=".ui.MainActivityDisguise"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name_disguise"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:targetActivity=".ui.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Biometric unlock + alarm UI. Launched from FuturaAlarmService via
+             a full-screen PendingIntent (PendingIntentFactory). -->
+        <activity
+            android:name=".ui.AlarmActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode|density|smallestScreenSize"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:showWhenLocked="true"
+            android:taskAffinity=".alarm"
+            android:theme="@style/Theme.Futura.Alarm"
+            android:turnScreenOn="true"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             Services
+             ═══════════════════════════════════════════════════════════════ -->
+
+        <!-- Phase 1 foreground service: alarm playback + handoff. -->
+        <service
+            android:name=".alarm.FuturaAlarmService"
+            android:directBootAware="false"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback"
+            android:stopWithTask="false" />
+
+        <!-- Phase 6 Android Auto browse tree. Exported because the
+             MediaBrowserServiceCompat contract requires the car head unit
+             (a separate process) to bind. Access is still gated by the
+             MediaBrowserService's own session token. -->
+        <service
+            android:name=".system.FuturaMediaBrowserService"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+
+        <!-- Phase 6 Wear OS remote command bridge. -->
+        <service
+            android:name=".system.FuturaWearableListener"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+            </intent-filter>
+        </service>
+
+        <!-- Phase 6 self-healing JobService (SelfHealJobService). -->
+        <service
+            android:name=".system.SelfHealJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             Broadcast receivers
+             ═══════════════════════════════════════════════════════════════ -->
+
+        <!-- Alarm fire / dismiss transport. -->
+        <receiver
+            android:name=".alarm.AlarmReceiver"
+            android:directBootAware="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.ALARM_CLOCK" />
+                <action android:name="com.futura.action.ALARM_FIRE" />
+                <action android:name="com.futura.action.ALARM_DISMISS" />
+                <action android:name="com.futura.action.ALARM_SNOOZE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- BOOT_COMPLETED re-arm scheduler (BootCompletionHandler). -->
+        <receiver
+            android:name=".alarm.BootCompletionHandler"
+            android:directBootAware="false"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Headphone click parser (single/double/triple). -->
+        <receiver
+            android:name=".system.HeadsetHookReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Fallback media button receiver for BT headsets that do not
+             honour MediaSession action routing. -->
+        <receiver
+            android:name=".system.MediaButtonReceiver"
+            android:exported="true"
+            android:permission="android.permission.MEDIA_CONTENT_CONTROL">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Headphone unplug pause. -->
+        <receiver
+            android:name=".system.BecomingNoisyReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+        </receiver>
+
+        <!-- SD card eject/mount handling. -->
+        <receiver
+            android:name=".system.StorageVolumeChangeListener"
+            android:directBootAware="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+                <action android:name="android.intent.action.MEDIA_EJECT" />
+                <action android:name="android.intent.action.MEDIA_REMOVED" />
+                <data android:scheme="file" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Wear OS IPC command receiver. -->
+        <receiver
+            android:name=".system.WearOsRemoteReceiver"
+            android:exported="true"
+            android:permission="com.google.android.gms.permission.BIND_WEARABLE_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="com.futura.action.WEAR_COMMAND" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Tasker / MacroDroid automation gateway. Exported by design;
+             IpcSecurityGuard validates the calling UID and signature. -->
+        <receiver
+            android:name=".system.TaskerIntentGateway"
+            android:exported="true"
+            android:permission="com.futura.permission.CONTROL_PLAYBACK">
+            <intent-filter>
+                <action android:name="com.futura.action.TASKER_PLAY" />
+                <action android:name="com.futura.action.TASKER_PAUSE" />
+                <action android:name="com.futura.action.TASKER_NEXT" />
+                <action android:name="com.futura.action.TASKER_PREVIOUS" />
+                <action android:name="com.futura.action.TASKER_PLAYLIST" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Now Playing homescreen widget (RemoteViews). -->
+        <receiver
+            android:name=".system.FuturaWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.futura.action.WIDGET_PLAY_PAUSE" />
+                <action android:name="com.futura.action.WIDGET_NEXT" />
+                <action android:name="com.futura.action.WIDGET_PREVIOUS" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/futura_widget_info" />
+        </receiver>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+
+            <!-- Media session resumption from the OS media panel. -->
+        <receiver
+            android:name="androidx.media3.session.MediaButtonReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             App shortcuts
+             ═══════════════════════════════════════════════════════════════ -->
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             WorkManager / DataStore
+             ═══════════════════════════════════════════════════════════════ -->
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
+        <service
+            android:name=".system.IntegrityWorkInitializer$Service"
+            android:exported="false" />
+
+    </application>
+</manifest>

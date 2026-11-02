@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Full-colour launcher shortcut icon for the "Play Favorites" action.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="#1A1F26"
+        android:pathData="M54,18a36,36 0 1,0 0.01,0z" />
+    <path
+        android:fillColor="#00FF66"
+        android:fillType="evenOdd"
+        android:pathData="M54,18a36,36 0 1,0 0.01,0zM54,24a30,30 0 1,1 -0.01,0z" />
+    <path
+        android:fillColor="#00E5FF"
+        android:fillAlpha="0.35"
+        android:pathData="M54,32a22,22 0 1,0 0.01,0z" />
+    <group
+        android:scaleX="2.4"
+        android:scaleY="2.4"
+        android:translateX="25.2"
+        android:translateY="25.2">
+        <path
+            android:fillColor="#00FF66"
+            android:pathData="M12,21.35l-1.45,-1.32C5.4,15.36 2,12.28 2,8.5 2,5.42 4.42,3 7.5,3c1.74,0 3.41,0.81 4.5,2.09C13.09,3.81 14.76,3 16.5,3 19.58,3 22,5.42 22,8.5c0,3.78 -3.4,6.86 -8.55,11.54L12,21.35z" />
+    </group>
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.55"
+        android:pathData="M40,44a3,3 0 1,0 0.01,0z" />
+</vector>

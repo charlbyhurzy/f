@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Base Android XML themes for Futura activities and pre-Compose windows. -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Futura" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/bg_oled_black</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        <item name="colorPrimary">@color/futura_emerald</item>
+        <item name="colorPrimaryDark">@color/bg_oled_black</item>
+        <item name="colorAccent">@color/futura_emerald</item>
+        <item name="android:navigationBarDividerColor" tools:targetApi="p">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.Futura.Alarm" parent="Theme.Futura">
+        <item name="android:windowBackground">@color/bg_oled_black</item>
+        <item name="colorPrimary">@color/state_error</item>
+        <item name="colorAccent">@color/state_error</item>
+    </style>
+
+</resources>

@@ -1,0 +1,22 @@
+#
+# Native source dependency submodules for the :engine module.
+
+[submodule "engine/src/main/cpp/third_party/libFLAC"]
+	path = engine/src/main/cpp/third_party/libFLAC
+	url = https://github.com/xiph/flac.git
+	branch = master
+
+[submodule "engine/src/main/cpp/third_party/libsamplerate"]
+	path = engine/src/main/cpp/third_party/libsamplerate
+	url = https://github.com/libsndfile/libsamplerate.git
+	branch = master
+
+[submodule "engine/src/main/cpp/third_party/soundtouch"]
+	path = engine/src/main/cpp/third_party/soundtouch
+	url = https://codeberg.org/soundtouch/soundtouch.git
+	branch = master
+
+[submodule "engine/src/main/cpp/third_party/libusb"]
+	path = engine/src/main/cpp/third_party/libusb
+	url = https://github.com/libusb/libusb.git
+	branch = master

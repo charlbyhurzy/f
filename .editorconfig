@@ -1,0 +1,145 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+[*.{kt,kts}]
+indent_size = 4
+max_line_length = 120
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+ij_kotlin_code_style_defaults = KOTLIN_OFFICIAL
+ij_kotlin_name_count_to_use_star_import = 99
+ij_kotlin_name_count_to_use_star_import_for_members = 99
+ij_kotlin_packages_to_use_import_on_demand = unset
+
+[*.gradle.kts]
+indent_size = 4
+max_line_length = 120
+insert_final_newline = true
+
+[*.gradle]
+indent_size = 4
+
+[*.java]
+indent_size = 4
+max_line_length = 120
+
+[*.{c,cc,cpp,cxx,h,hpp,hxx,inl,ipp}]
+indent_style = space
+indent_size = 2
+max_line_length = 100
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[{CMakeLists.txt,*.cmake}]
+indent_style = space
+indent_size = 2
+max_line_length = 100
+trim_trailing_whitespace = true
+
+[*.xml]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+[AndroidManifest.xml]
+indent_size = 4
+
+[*.toml]
+indent_style = space
+indent_size = 4
+max_line_length = off
+
+[*.properties]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+
+[*.{pro,proguard}]
+indent_style = space
+indent_size = 4
+max_line_length = off
+trim_trailing_whitespace = true
+
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+max_line_length = 120
+
+[*.json]
+indent_style = space
+indent_size = 2
+max_line_length = off
+
+[*.{md,markdown}]
+indent_style = space
+indent_size = 2
+max_line_length = 100
+trim_trailing_whitespace = false
+
+[*.{sh,bash,zsh}]
+indent_style = space
+indent_size = 2
+max_line_length = 100
+end_of_line = lf
+
+[gradlew]
+end_of_line = lf
+insert_final_newline = false
+
+[gradlew.bat]
+end_of_line = crlf
+insert_final_newline = false
+
+[.gitignore]
+indent_style = space
+indent_size = 4
+max_line_length = off
+
+[.gitmodules]
+indent_style = tab
+
+[.editorconfig]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = false
+
+[{Makefile,makefile,GNUmakefile}]
+indent_style = tab
+insert_final_newline = true
+
+[*.ninja]
+indent_style = space
+indent_size = 2
+
+[*.{png,jpg,jpeg,gif,webp,svg,ico,icns}]
+insert_final_newline = false
+trim_trailing_whitespace = false
+
+[*.{mp3,flac,ogg,opus,m4a,aac,wav,aiff,dsf,dff}]
+insert_final_newline = false
+trim_trailing_whitespace = false
+
+[*.{jks,keystore,p12,pfx,jar,aar,apk,aab,so,a,o}]
+insert_final_newline = false
+trim_trailing_whitespace = false
+
+[**/generated/**]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = false
+
+[**/third_party/**]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = false
+insert_final_newline = false
+max_line_length = off

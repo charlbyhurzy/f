@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Static launcher shortcuts for Futura Audio. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="alarm"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_alarm"
+        android:shortcutShortLabel="@string/alarm_title">
+        <intent
+            android:action="com.futura.action.SHORTCUT_ALARM"
+            android:targetPackage="com.futura"
+            android:targetClass="com.futura.ui.MainActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="favorites"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_heart"
+        android:shortcutShortLabel="@string/library_radial_favorites">
+        <intent
+            android:action="com.futura.action.SHORTCUT_FAVORITES"
+            android:targetPackage="com.futura"
+            android:targetClass="com.futura.ui.MainActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="playlist"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_playlist"
+        android:shortcutShortLabel="@string/library_radial_queues">
+        <intent
+            android:action="com.futura.action.SHORTCUT_PLAYLIST"
+            android:targetPackage="com.futura"
+            android:targetClass="com.futura.ui.MainActivity" />
+    </shortcut>
+</shortcuts>

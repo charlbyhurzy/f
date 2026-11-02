@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    futura-audio/app/src/main/res/values/colors.xml
+
+    Central colour catalog for the Futura Audio app module.
+
+    Every colour referenced from any Compose theme (theme/Color.kt),
+    XML layout (widget_now_playing.xml and any future RemoteViews file),
+    vector drawable (`android:tint` attributes), notification icon tint,
+    or Android resource XML (themes, backup rules) is declared here.
+
+    ── Palette anchors ─────────────────────────────────────────────────────
+    The whole visual system is built around three anchor colours:
+
+      OLED True Black  #000000  — full-bleed background on every screen,
+                                  the reason the app saves power on
+                                  OLED panels and the reason the alarm
+                                  overlay reads as "a system surface"
+                                  rather than "an app".
+      Cyber Emerald    #00FF66  — primary accent. Armed alarms, primary
+                                  transport, active tabs, focus rings,
+                                  play button glow, success signals.
+      Signal Cyan      #00E5FF  — secondary accent. Artist names, sub-headings,
+                                  metadata chips, "informational" state.
+
+    Everything else is derived: state modifiers (amber for snooze, red for
+    error), surface fills for glass-morphism cards, and de-emphasised
+    slate variants for inactive / low-power surfaces.
+
+    ── Naming convention ───────────────────────────────────────────────────
+    Flat lower_snake_case names grouped by semantic role (not by hex
+    value). This lets `theme/Color.kt` map Compose `Color` constants
+    directly via `colorResource(R.color.X)` and keeps `widget_now_playing.xml`
+    free of raw hex literals where a named colour would do.
+
+      • `futura_*`         — brand anchors (should rarely be extended)
+      • `bg_*`             — background surfaces (oled_black, surface_*)
+      • `text_*`           — text roles (primary, secondary, disabled)
+      • `state_*`          — feedback states (success, warning, error, info)
+      • `alarm_*`          — Phase 1 alarm status colours
+      • `visualizer_*`     — Phase 5 visualizer hue anchors
+      • `privacy_*`        — Phase 6 privacy vault colours
+      • `ic_launcher_background` — special name referenced from
+                                 res/mipmap-anydpi-v26/ic_launcher.xml
+
+    ── Colour references already baked into earlier files ─────────────────
+    The following values were used in drawables / layouts that are
+    already delivered. They MUST be preserved here verbatim so future
+    refactors don't accidentally diverge:
+
+      ic_alarm.xml               #00FF66
+      ic_alarm_off.xml           #7A8A99
+      ic_alarm_snoozed.xml       #FFB000
+      ic_battery.xml             #7A8A99
+      ic_shortcut_alarm.xml      #1A1F26, #00FF66, #00E5FF
+      ic_shortcut_heart.xml      #1A1F26, #00FF66, #00E5FF, #FFFFFF
+      ic_shortcut_playlist.xml   #1A1F26, #00FF66, #00E5FF, #FFFFFF
+      ic_launcher_foreground.xml #00FF66, #00E5FF, #FFFFFF
+      widget_now_playing.xml     #000000, #1A1F26, #00FF66, #00E5FF, #FFFFFF
+-->
+<resources>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Brand anchors
+         ═══════════════════════════════════════════════════════════════════ -->
+    <color name="futura_black">#FF000000</color>
+    <color name="futura_emerald">#FF00FF66</color>
+    <color name="futura_cyan">#FF00E5FF</color>
+    <color name="futura_amber">#FFFFB000</color>
+    <color name="futura_white">#FFFFFFFF</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Backgrounds & surfaces
+         ═══════════════════════════════════════════════════════════════════ -->
+    <!-- OLED true black: default background on every full-bleed screen. -->
+    <color name="bg_oled_black">#FF000000</color>
+
+    <!-- Glass-morphism card base (dark slate). Used by GlassCard.kt and by
+         the placeholder behind widget_album_art and shortcut discs. -->
+    <color name="bg_surface">#FF1A1F26</color>
+
+    <!-- Slightly raised surface for stacked cards / modal sheets. -->
+    <color name="bg_surface_raised">#FF232A33</color>
+
+    <!-- Recessed surface for input fields / inline inspectors. -->
+    <color name="bg_surface_recessed">#FF12161B</color>
+
+    <!-- Overlay scrim behind modals (Stream Inspector, Privacy Vault mask). -->
+    <color name="bg_scrim">#CC000000</color>
+
+    <!-- Sleep Dock dim mode: ultra-low-luminance background so the display
+         stays effectively off while the clock and timer remain legible. -->
+    <color name="bg_sleep_dock">#FF0A0700</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Text roles
+         ═══════════════════════════════════════════════════════════════════ -->
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_secondary">#FF00E5FF</color>
+    <color name="text_tertiary">#FF7A8A99</color>
+    <color name="text_disabled">#FF4A525C</color>
+    <color name="text_inverse">#FF000000</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Interaction state overlays
+         ═══════════════════════════════════════════════════════════════════ -->
+    <color name="ripple_emerald">#3300FF66</color>
+    <color name="ripple_cyan">#3300E5FF</color>
+    <color name="ripple_neutral">#33FFFFFF</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         State feedback
+         ═══════════════════════════════════════════════════════════════════ -->
+    <color name="state_success">#FF00FF66</color>
+    <color name="state_warning">#FFFFB000</color>
+    <color name="state_error">#FFFF3B5C</color>
+    <color name="state_info">#FF00E5FF</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Phase 1 — Alarm status
+         ═══════════════════════════════════════════════════════════════════ -->
+    <color name="alarm_armed">#FF00FF66</color>
+    <color name="alarm_snoozed">#FFFFB000</color>
+    <color name="alarm_off">#FF7A8A99</color>
+    <color name="alarm_firing">#FFFF3B5C</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Phase 2 — Now Playing / Stream Inspector
+         ═══════════════════════════════════════════════════════════════════ -->
+    <!-- Format badge pill: FLAC 24-bit / 96kHz -->
+    <color name="nowplaying_format_badge_bg">#1A00E5FF</color>
+    <color name="nowplaying_format_badge_fg">#FF00E5FF</color>
+
+    <!-- Waveform scrubber: played vs. unplayed portions -->
+    <color name="nowplaying_waveform_played">#FF00FF66</color>
+    <color name="nowplaying_waveform_unplayed">#FF3A434F</color>
+    <color name="nowplaying_waveform_cursor">#FFFFFFFF</color>
+
+    <!-- Bit-perfect status pill (Stream Inspector) -->
+    <color name="nowplaying_bitperfect_active">#FF00FF66</color>
+    <color name="nowplaying_bitperfect_bypassed">#FFFFB000</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Phase 3 — Library & search
+         ═══════════════════════════════════════════════════════════════════ -->
+    <color name="library_tab_active">#FF00FF66</color>
+    <color name="library_tab_inactive">#FF7A8A99</color>
+    <color name="library_search_bg">#FF12161B</color>
+    <color name="library_search_hint">#FF7A8A99</color>
+    <color name="library_radial_menu_bg">#E61A1F26</color>
+
+    <!-- 2D Mood Map quadrant colours (valence × energy matrix) -->
+    <color name="library_mood_calm">#FF4FA8FF</color>
+    <color name="library_mood_happy">#FF00FF66</color>
+    <color name="library_mood_energetic">#FFFFB000</color>
+    <color name="library_mood_intense">#FFFF3B5C</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Phase 4 — DJ Studio & Sound Studio
+         ═══════════════════════════════════════════════════════════════════ -->
+    <color name="dj_deck_a">#FF00E5FF</color>
+    <color name="dj_deck_b">#FF00FF66</color>
+    <color name="dj_hot_cue_active">#FFFFB000</color>
+    <color name="dj_hot_cue_inactive">#FF3A434F</color>
+    <color name="dj_loop_active">#FF00FF66</color>
+
+    <!-- Stem colours (4-layer isolator) -->
+    <color name="dj_stem_vocal">#FFFF3B5C</color>
+    <color name="dj_stem_drums">#FFFFB000</color>
+    <color name="dj_stem_bass">#FF00FF66</color>
+    <color name="dj_stem_other">#FF00E5FF</color>
+
+    <!-- VU meter segments -->
+    <color name="dj_vu_safe">#FF00FF66</color>
+    <color name="dj_vu_warn">#FFFFB000</color>
+    <color name="dj_vu_clip">#FFFF3B5C</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Phase 5 — Visualizer Deck
+         ═══════════════════════════════════════════════════════════════════ -->
+    <color name="visualizer_primary">#FF00FF66</color>
+    <color name="visualizer_secondary">#FF00E5FF</color>
+    <color name="visualizer_accent">#FFFFB000</color>
+    <color name="visualizer_shader_bg">#FF000000</color>
+    <color name="visualizer_shader_grid">#1A00FF66</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Phase 6 — Car Mode, Sleep Dock, Privacy Vault
+         ═══════════════════════════════════════════════════════════════════ -->
+    <!-- Car Mode high-contrast surfaces -->
+    <color name="car_mode_bg">#FF000000</color>
+    <color name="car_mode_primary">#FF00FF66</color>
+    <color name="car_mode_secondary">#FFFFFFFF</color>
+
+    <!-- Sleep Dock amber-red (eye-safe, minimal blue light) -->
+    <color name="sleep_clock">#FFFF7A00</color>
+    <color name="sleep_clock_dim">#FF7A3A00</color>
+    <color name="sleep_timer_ring">#FF00FF66</color>
+
+    <!-- Privacy Vault -->
+    <color name="privacy_indicator_active">#FFFF3B5C</color>
+    <color name="privacy_indicator_inactive">#FF7A8A99</color>
+    <color name="privacy_redacted_bar">#FF3A434F</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Icon tints (used by RemoteViews & vector `android:tint`)
+         ═══════════════════════════════════════════════════════════════════ -->
+    <color name="icon_primary">#FFFFFFFF</color>
+    <color name="icon_emerald">#FF00FF66</color>
+    <color name="icon_cyan">#FF00E5FF</color>
+    <color name="icon_dimmed">#FF7A8A99</color>
+    <color name="icon_amber">#FFFFB000</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Launcher icon (referenced by res/mipmap-anydpi-v26/ic_launcher.xml
+         and ic_launcher_round.xml as the adaptive-icon background layer)
+         ═══════════════════════════════════════════════════════════════════ -->
+    <color name="ic_launcher_background">#FF1A1F26</color>
+
+</resources>
