@@ -79,6 +79,7 @@ keystore.properties
 **/third_party/**/*.a
 **/third_party/**/*.h
 **/third_party/**/include/
+!engine/src/main/cpp/third_party/oboe/include/
 **/third_party/**/lib/
 
 .idea/
